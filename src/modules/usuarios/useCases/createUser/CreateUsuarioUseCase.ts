@@ -1,5 +1,6 @@
 import { Usuario } from "../../model/Usuario";
 import { IUsuariosRepository } from "../../repositories/IUsuariosRepository";
+import { hashSync } from "bcrypt"
 
 interface IRequest{
     email:string,
@@ -19,7 +20,10 @@ class CreateUsuarioUseCase{
             throw new Error("This email already exists");
         }
 
-        const user = this.usuariosRepository.create({email, primeiro_nome,ultimo_nome,password,telefone})
+        const passwordHash = hashSync(password, 8);
+
+
+        const user = this.usuariosRepository.create({email, primeiro_nome,ultimo_nome,password: passwordHash,telefone})
         return user;
     }
 }
